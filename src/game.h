@@ -23,8 +23,10 @@ private:
   std::default_random_engine re;
   std::uniform_int_distribution<unsigned int> dist;
   std::string scoreString;
+  std::string highScoreString;
   Texture2D spriteSheet;
   unsigned long long score;
+  unsigned long long highScore;
   /*
    * 0 - score dirty
    * 1 - is blinking

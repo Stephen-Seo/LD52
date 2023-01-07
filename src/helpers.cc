@@ -47,8 +47,19 @@ void Helpers::draw_blinking_eye(float x, float y, float radius) {
   DrawLineEx({x - radius, y}, {x + radius, y}, BLINKING_EYE_SIZE, BLACK);
 }
 
-void Helpers::draw_open_mouth(float x, float y, float radius) {
-  DrawCircle(x, y, radius, BLACK);
+void Helpers::draw_x_eye(float x, float y, float radius) {
+  DrawLineEx({x - radius, y - radius}, {x + radius, y + radius}, X_EYE_SIZE,
+             BLACK);
+  DrawLineEx({x - radius, y + radius}, {x + radius, y - radius}, X_EYE_SIZE,
+             BLACK);
+}
+
+void Helpers::draw_open_mouth(float x, float y, float width, float radius,
+                              FoodType foodType) {
+  float offsets[2];
+  internal_get_offsets(offsets, foodType);
+
+  DrawCircle(x + offsets[0] * width, y, radius, BLACK);
 }
 
 void Helpers::draw_happy_mouth(float x, float y, float width, float radius,
@@ -61,13 +72,19 @@ void Helpers::draw_happy_mouth(float x, float y, float width, float radius,
 }
 
 void Helpers::draw_eyes_full(float x, float y, float width, float height,
-                             float radius, FoodType foodType, bool isBlinking) {
+                             float radius, FoodType foodType, bool isBlinking,
+                             bool isX) {
   float offsets[2];
   internal_get_offsets(offsets, foodType);
 
   const float eye_width = width * EYE_WIDTH_RATIO;
 
-  if (isBlinking) {
+  if (isX) {
+    draw_x_eye(x - eye_width / 2.0F + offsets[0] * width,
+               y + offsets[1] * height, radius);
+    draw_x_eye(x + eye_width / 2.0F + offsets[0] * width,
+               y + offsets[1] * height, radius);
+  } else if (isBlinking) {
     draw_blinking_eye(x - eye_width / 2.0F + offsets[0] * width,
                       y + offsets[1] * height, radius);
     draw_blinking_eye(x + eye_width / 2.0F + offsets[0] * width,

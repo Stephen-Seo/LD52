@@ -37,8 +37,10 @@ constexpr float MAX_FOOD_WH = 500.0F;
 
 constexpr float EYE_RADIUS = 14.0F;
 constexpr float BLINKING_EYE_SIZE = 4.0F;
+constexpr float X_EYE_SIZE = 4.0F;
 
 constexpr float MOUTH_RADIUS = 20.0F;
+constexpr float OPEN_MOUTH_RADIUS = 16.0F;
 
 constexpr float MIN_BLINK_TIME = 1.0F;
 constexpr float MAX_BLINK_TIME = 20.0F;
@@ -48,9 +50,9 @@ constexpr float CUT_RATE = 0.7F;
 
 constexpr float CUT_TIMER_RATE_INC_AMT = 0.1F;
 
-constexpr float SPLIT_DX = 60.0F;
-constexpr float SPLIT_DY = 100.0F;
-constexpr float SPLIT_DA = 80.0F;
+constexpr float SPLIT_DX = 80.0F;
+constexpr float SPLIT_DY = 120.0F;
+constexpr float SPLIT_DA = 100.0F;
 
 constexpr float POST_CUT_TIME = 1.7F;
 

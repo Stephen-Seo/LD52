@@ -10,8 +10,9 @@
 
 Game::Game()
     : re(std::random_device{}()), dist(0, FOOD_COUNT - 1), score(0),
-      areaSizeRatio(1.0F), currentFood(dist(re)), blinkTimer(10.0F),
-      cutTimer(0.0F), cutTimerRateInc(1.0F), postCutTimer(0.0F) {
+      highScore(0), areaSizeRatio(1.0F), currentFood(dist(re)),
+      blinkTimer(10.0F), cutTimer(0.0F), cutTimerRateInc(1.0F),
+      postCutTimer(0.0F) {
   flags.set(0);
   flags.set(3);
 
@@ -28,18 +29,7 @@ void Game::update_impl() {
 
   if (flags.test(0)) {
     flags.set(0);
-    scoreString.clear();
-    if (score == 0) {
-      scoreString.push_back('0');
-    } else {
-      std::string temp;
-      for (unsigned long long i = score; i > 0; i /= 10) {
-        temp.push_back((i % 10) + '0');
-      }
-      for (int i = temp.size(); i-- > 0;) {
-        scoreString.push_back(temp[i]);
-      }
-    }
+    scoreString = std::string("Score: ") + std::to_string(score);
   }
 
   blinkTimer -= dt;
@@ -165,6 +155,10 @@ void Game::draw_impl() {
   int coords[4];
   Helpers::get_fruit_coords(coords, (FoodType)currentFood);
 
+  DrawRectangle(0, 0, GetScreenWidth(), offsetY, {160, 160, 160, 255});
+  DrawRectangle(0, offsetY + height, GetScreenWidth(),
+                GetScreenHeight() - (offsetY + height), {160, 160, 160, 255});
+
   if (flags.test(6)) {
     // bottom portion
     DrawTexturePro(
@@ -197,15 +191,20 @@ void Game::draw_impl() {
 
   Helpers::draw_eyes_full(offsetX + width / 2.0F, offsetY + height / 2.0F,
                           width, height, EYE_RADIUS, (FoodType)currentFood,
-                          flags.test(1));
+                          flags.test(1), flags.test(5));
 
   if (flags.test(2)) {
     Helpers::draw_happy_mouth(offsetX + width / 2.0F,
                               offsetY + height / 2.0F * 1.1F, width,
                               MOUTH_RADIUS, (FoodType)currentFood);
+  } else if (flags.test(4) && !flags.test(5)) {
+    Helpers::draw_open_mouth(offsetX + width / 2.0F,
+                             offsetY + height / 2.0F * 1.1F, width,
+                             OPEN_MOUTH_RADIUS, (FoodType)currentFood);
   }
 
   DrawText(scoreString.c_str(), 2, 2, 32, BLACK);
+  DrawText(highScoreString.c_str(), 2, 34, 32, BLACK);
   EndDrawing();
 }
 
@@ -218,6 +217,10 @@ void Game::reset(bool wasGameOver) {
   flags.reset(5);
   flags.reset(6);
   if (wasGameOver) {
+    if (score > highScore) {
+      highScore = score;
+      highScoreString = std::string("High score: ") + std::to_string(highScore);
+    }
     score = 0;
     cutTimerRateInc = 1.0F;
   }
@@ -226,7 +229,8 @@ void Game::reset(bool wasGameOver) {
   while (prevFood == currentFood) {
     currentFood = dist(re);
   }
-  blinkTimer = 10.0F;
+  blinkTimer =
+      std::uniform_real_distribution<float>{MIN_BLINK_TIME, MAX_BLINK_TIME}(re);
   cutTimer = std::uniform_real_distribution<float>(0.0F, 1.0F)(re);
   postCutTimer = 0.0F;
 }
