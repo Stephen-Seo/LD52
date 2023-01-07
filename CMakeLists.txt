@@ -18,6 +18,8 @@ set(LD52Native_SOURCES
     src/main.cc
     src/game.cc
     src/ems.cc
+    src/helpers.cc
+    src/constants.cc
 )
 
 add_executable(LD52Native ${LD52Native_SOURCES})

@@ -31,7 +31,8 @@ void game_update(void *game_ptr) { ((Game *)game_ptr)->do_update(); }
 
 int main() {
 #ifdef __EMSCRIPTEN__
-  InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, "LD52_Harvest_Food_Cuts");
+  InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT,
+             "LD52_Harvest_Food_Cuts");
 #else
   InitWindow(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT,
              "LD52_Harvest_Food_Cuts_Native");

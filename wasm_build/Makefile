@@ -7,10 +7,15 @@ endif
 SOURCES = \
 		../src/main.cc \
 		../src/ems.cc \
-		../src/game.cc
+		../src/game.cc \
+		../src/constants.cc \
+		../src/helpers.cc
 
 HEADERS = \
-		../src/constants.h
+		../src/constants.h \
+		../src/game.h \
+		../src/ems.h \
+		../src/helpers.h
 
 CXX = source ${HOME}/git/emsdk/emsdk_env.sh && em++
 
@@ -22,6 +27,7 @@ ld52_harvest_cut.html: ${SOURCES} ${HEADERS}
 		--shell-file custom_shell.html \
 		-sEXPORTED_FUNCTIONS=_main \
 		-sEXPORTED_RUNTIME_METHODS=ccall \
+		--preload-file ../resources \
 		${OTHER_FLAGS} \
 		${SOURCES}
 
