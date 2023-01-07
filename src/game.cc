@@ -260,6 +260,8 @@ void Game::draw_impl() {
   }
 
   if (flags.test(7)) {
+    DrawRectangle(GetScreenWidth() - MUSIC_NOTE_WH, 0, MUSIC_NOTE_WH,
+                  MUSIC_NOTE_WH, {100, 100, 100, 255});
     Helpers::draw_music_note(GetScreenWidth() - MUSIC_NOTE_WH, 0, MUSIC_NOTE_WH,
                              flags.test(8));
   }
