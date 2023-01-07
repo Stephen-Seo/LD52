@@ -21,6 +21,8 @@ extern float get_cut_pos(float timer, FoodType foodType);
 
 extern void get_fruit_coords(int coords[4], FoodType foodType);
 
+extern void draw_music_note(float x, float y, float wh, bool enabled);
+
 } // namespace Helpers
 
 #endif

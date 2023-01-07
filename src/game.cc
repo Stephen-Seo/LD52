@@ -106,40 +106,53 @@ void Game::update_impl() {
 
   cutPos = cutTimer * height + offsetY - height / 3.0F;
 
-  if (!flags.test(4) && IsMouseButtonPressed(0)) {
-    flags.set(4);
-    if (cutPos >= offsetY && cutPos <= offsetY + height / 3.0F) {
-      // in correct range
-      flags.set(2);
-      ++score;
-      flags.set(0);
-      PlaySound(nicecut.at(std::uniform_int_distribution<unsigned int>(
-          0, nicecut.size() - 1)(re)));
-    } else if (cutPos > offsetY + height / 3.0F) {
-      // past range
-      flags.set(5);
-      postCutTimer = POST_CUT_TIME;
-      PlaySound(ohno.at(
-          std::uniform_int_distribution<unsigned int>(0, ohno.size() - 1)(re)));
-    } else {
-      // before range
-      postCutTimer = POST_CUT_TIME;
-      PlaySound(ohno.at(
-          std::uniform_int_distribution<unsigned int>(0, ohno.size() - 1)(re)));
-    }
+  if (IsMouseButtonPressed(0)) {
+    if (flags.test(7) && GetTouchX() >= GetScreenWidth() - MUSIC_NOTE_WH &&
+        GetTouchX() <= GetScreenWidth() && GetTouchY() >= 0 &&
+        GetTouchY() <= MUSIC_NOTE_WH) {
+      flags.flip(8);
+      if (flags.test(8)) {
+        PlayMusicStream(music);
+      } else {
+        PauseMusicStream(music);
+      }
+    } else if (!flags.test(4)) {
+      flags.set(4);
+      if (cutPos >= offsetY && cutPos <= offsetY + height / 3.0F) {
+        // in correct range
+        flags.set(2);
+        ++score;
+        flags.set(0);
+        PlaySound(nicecut.at(std::uniform_int_distribution<unsigned int>(
+            0, nicecut.size() - 1)(re)));
+      } else if (cutPos > offsetY + height / 3.0F) {
+        // past range
+        flags.set(5);
+        postCutTimer = POST_CUT_TIME;
+        PlaySound(ohno.at(std::uniform_int_distribution<unsigned int>(
+            0, ohno.size() - 1)(re)));
+      } else {
+        // before range
+        postCutTimer = POST_CUT_TIME;
+        PlaySound(ohno.at(std::uniform_int_distribution<unsigned int>(
+            0, ohno.size() - 1)(re)));
+      }
 
-    if (flags.test(4) && (flags.test(2) || flags.test(5)) && !flags.test(6)) {
-      flags.set(6);
-      relativeCutRatio = (cutPos - offsetY) / height;
-      splitX = offsetX;
-      splitY = offsetY;
-      splitAngle = 0.0F;
-      splitDX = std::uniform_real_distribution<float>(-SPLIT_DX, SPLIT_DX)(re);
-      splitDY = std::uniform_real_distribution<float>(-SPLIT_DY, SPLIT_DY)(re);
-      splitDAngle =
-          std::uniform_real_distribution<float>(-SPLIT_DA, SPLIT_DA)(re);
-      postCutTimer = POST_CUT_TIME;
-      cutTimerRateInc += CUT_TIMER_RATE_INC_AMT;
+      if (flags.test(4) && (flags.test(2) || flags.test(5)) && !flags.test(6)) {
+        flags.set(6);
+        relativeCutRatio = (cutPos - offsetY) / height;
+        splitX = offsetX;
+        splitY = offsetY;
+        splitAngle = 0.0F;
+        splitDX =
+            std::uniform_real_distribution<float>(-SPLIT_DX, SPLIT_DX)(re);
+        splitDY =
+            std::uniform_real_distribution<float>(-SPLIT_DY, SPLIT_DY)(re);
+        splitDAngle =
+            std::uniform_real_distribution<float>(-SPLIT_DA, SPLIT_DA)(re);
+        postCutTimer = POST_CUT_TIME;
+        cutTimerRateInc += CUT_TIMER_RATE_INC_AMT;
+      }
     }
   }
 
@@ -174,12 +187,20 @@ void Game::update_impl() {
       ohno.at(4) = LoadSound("resources/ohno4.ogg");
       ohno.at(5) = LoadSound("resources/ohno5.ogg");
       ohno.at(6) = LoadSound("resources/ohno6.ogg");
+
+      music = LoadMusicStream("resources/LD52_00.ogg");
+      SetMusicVolume(music, 0.4F);
+
       flags.set(7);
     }
   }
 
   if (audioNoticeTimer > 0.0F) {
     audioNoticeTimer -= dt;
+  }
+
+  if (flags.test(7)) {
+    UpdateMusicStream(music);
   }
 }
 
@@ -220,7 +241,7 @@ void Game::draw_impl() {
   }
 
   DrawRectangle(0, offsetY, GetScreenWidth(), height / 3.0F,
-                {255, 255, 255, 127});
+                {255, 255, 255, 160});
 
   DrawLine(0, cutPos, GetScreenWidth(), cutPos, BLACK);
 
@@ -236,6 +257,11 @@ void Game::draw_impl() {
     Helpers::draw_open_mouth(offsetX + width / 2.0F,
                              offsetY + height / 2.0F * 1.1F, width,
                              OPEN_MOUTH_RADIUS, (FoodType)currentFood);
+  }
+
+  if (flags.test(7)) {
+    Helpers::draw_music_note(GetScreenWidth() - MUSIC_NOTE_WH, 0, MUSIC_NOTE_WH,
+                             flags.test(8));
   }
 
   DrawText(scoreString.c_str(), 2, 2, 32, BLACK);

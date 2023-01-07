@@ -56,4 +56,6 @@ constexpr float SPLIT_DA = 100.0F;
 
 constexpr float POST_CUT_TIME = 1.7F;
 
+constexpr float MUSIC_NOTE_WH = 80.0F;
+
 #endif

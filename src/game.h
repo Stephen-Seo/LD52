@@ -30,6 +30,7 @@ private:
   Texture2D spriteSheet;
   std::array<Sound, 7> nicecut;
   std::array<Sound, 7> ohno;
+  Music music;
   unsigned long long score;
   unsigned long long highScore;
   /*
@@ -41,6 +42,7 @@ private:
    * 5 - sad
    * 6 - relativeCutPos is set
    * 7 - audio loaded
+   * 8 - is music playing
    */
   std::bitset<32> flags;
   float areaSizeRatio;

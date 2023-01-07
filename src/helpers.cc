@@ -153,3 +153,15 @@ void Helpers::get_fruit_coords(int coords[4], FoodType foodType) {
     break;
   }
 }
+
+void Helpers::draw_music_note(float x, float y, float wh, bool enabled) {
+  float radiusx = wh * 2.7F / 10.0F;
+  DrawEllipse(x + wh / 2.0F, y + wh * 2.0F / 3.0F, radiusx, wh * 2.0F / 10.0F,
+              WHITE);
+  DrawLineEx({x + wh / 2.0F + radiusx - 2.0F, y + wh / 8.0F},
+             {x + wh / 2.0F + radiusx - 2.0F, y + wh * 3.0F / 4.2F}, 4.0F,
+             WHITE);
+  if (!enabled) {
+    draw_x_eye(x + wh / 2.0F, y + wh / 2.0F, wh / 2.0F);
+  }
+}
