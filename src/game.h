@@ -2,6 +2,7 @@
 #define LD52_HARVEST_FOOD_CUTS_GAME_H_
 
 // standard library includes
+#include <array>
 #include <bitset>
 #include <random>
 
@@ -14,6 +15,8 @@ public:
 
   void do_update();
 
+  void screen_resized();
+
 private:
   void update_impl();
   void draw_impl();
@@ -25,6 +28,8 @@ private:
   std::string scoreString;
   std::string highScoreString;
   Texture2D spriteSheet;
+  std::array<Sound, 7> nicecut;
+  std::array<Sound, 7> ohno;
   unsigned long long score;
   unsigned long long highScore;
   /*
@@ -35,6 +40,7 @@ private:
    * 4 - cut has happened
    * 5 - sad
    * 6 - relativeCutPos is set
+   * 7 - audio loaded
    */
   std::bitset<32> flags;
   float areaSizeRatio;
@@ -57,6 +63,7 @@ private:
   float splitDY;
   float splitDAngle;
   float postCutTimer;
+  float audioNoticeTimer;
 };
 
 #endif

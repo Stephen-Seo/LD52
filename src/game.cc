@@ -12,7 +12,7 @@ Game::Game()
     : re(std::random_device{}()), dist(0, FOOD_COUNT - 1), score(0),
       highScore(0), areaSizeRatio(1.0F), currentFood(dist(re)),
       blinkTimer(10.0F), cutTimer(0.0F), cutTimerRateInc(1.0F),
-      postCutTimer(0.0F) {
+      postCutTimer(0.0F), audioNoticeTimer(7.0F) {
   flags.set(0);
   flags.set(3);
 
@@ -23,6 +23,8 @@ void Game::do_update() {
   update_impl();
   draw_impl();
 }
+
+void Game::screen_resized() { flags.set(3); }
 
 void Game::update_impl() {
   const float dt = GetFrameTime();
@@ -111,13 +113,19 @@ void Game::update_impl() {
       flags.set(2);
       ++score;
       flags.set(0);
+      PlaySound(nicecut.at(std::uniform_int_distribution<unsigned int>(
+          0, nicecut.size() - 1)(re)));
     } else if (cutPos > offsetY + height / 3.0F) {
       // past range
       flags.set(5);
       postCutTimer = POST_CUT_TIME;
+      PlaySound(ohno.at(
+          std::uniform_int_distribution<unsigned int>(0, ohno.size() - 1)(re)));
     } else {
       // before range
       postCutTimer = POST_CUT_TIME;
+      PlaySound(ohno.at(
+          std::uniform_int_distribution<unsigned int>(0, ohno.size() - 1)(re)));
     }
 
     if (flags.test(4) && (flags.test(2) || flags.test(5)) && !flags.test(6)) {
@@ -145,6 +153,33 @@ void Game::update_impl() {
     if (postCutTimer <= 0.0F) {
       reset(!flags.test(2));
     }
+  }
+
+  if (!flags.test(7)) {
+    InitAudioDevice();
+
+    if (IsAudioDeviceReady()) {
+      nicecut.at(0) = LoadSound("resources/nicecut0.ogg");
+      nicecut.at(1) = LoadSound("resources/nicecut1.ogg");
+      nicecut.at(2) = LoadSound("resources/nicecut2.ogg");
+      nicecut.at(3) = LoadSound("resources/nicecut3.ogg");
+      nicecut.at(4) = LoadSound("resources/nicecut4.ogg");
+      nicecut.at(5) = LoadSound("resources/nicecut5.ogg");
+      nicecut.at(6) = LoadSound("resources/nicecut6.ogg");
+
+      ohno.at(0) = LoadSound("resources/ohno0.ogg");
+      ohno.at(1) = LoadSound("resources/ohno1.ogg");
+      ohno.at(2) = LoadSound("resources/ohno2.ogg");
+      ohno.at(3) = LoadSound("resources/ohno3.ogg");
+      ohno.at(4) = LoadSound("resources/ohno4.ogg");
+      ohno.at(5) = LoadSound("resources/ohno5.ogg");
+      ohno.at(6) = LoadSound("resources/ohno6.ogg");
+      flags.set(7);
+    }
+  }
+
+  if (audioNoticeTimer > 0.0F) {
+    audioNoticeTimer -= dt;
   }
 }
 
@@ -205,6 +240,9 @@ void Game::draw_impl() {
 
   DrawText(scoreString.c_str(), 2, 2, 32, BLACK);
   DrawText(highScoreString.c_str(), 2, 34, 32, BLACK);
+  if (audioNoticeTimer > 0.0F) {
+    DrawText("Try refreshing if there is no audio", 2, 70, 32, BLACK);
+  }
   EndDrawing();
 }
 
