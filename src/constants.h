@@ -22,11 +22,11 @@ constexpr int APPLE_COORDS[4] = {513, 0, 250, 251};
 constexpr int BROCCOLI_COORDS[4] = {767, 2, 268, 153};
 constexpr int BANANA_COORDS[4] = {525, 254, 189, 355};
 
-constexpr float CORN_EYE_OFFSET[2] = {-10, 0};
+constexpr float CORN_EYE_OFFSET[2] = {-0.01F, 0};
 constexpr float GRAPES_EYE_OFFSET[2] = {0, 0};
 constexpr float APPLE_EYE_OFFSET[2] = {0, 0};
 constexpr float BROCCOLI_EYE_OFFSET[2] = {0, 0};
-constexpr float BANANA_EYE_OFFSET[2] = {40, 0};
+constexpr float BANANA_EYE_OFFSET[2] = {0.2F, 0};
 
 constexpr float EYE_WIDTH_RATIO = 0.3F;
 
@@ -44,8 +44,14 @@ constexpr float MIN_BLINK_TIME = 1.0F;
 constexpr float MAX_BLINK_TIME = 20.0F;
 constexpr float BLINK_DURATION = 0.7F;
 
-constexpr float CUT_TIMER_RATE = 1.0F;
+constexpr float CUT_RATE = 0.7F;
 
-constexpr float CUT_TIMER_RATE_INC_AMT = 0.03F;
+constexpr float CUT_TIMER_RATE_INC_AMT = 0.1F;
+
+constexpr float SPLIT_DX = 60.0F;
+constexpr float SPLIT_DY = 100.0F;
+constexpr float SPLIT_DA = 80.0F;
+
+constexpr float POST_CUT_TIME = 1.7F;
 
 #endif

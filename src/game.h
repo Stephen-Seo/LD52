@@ -18,7 +18,7 @@ private:
   void update_impl();
   void draw_impl();
 
-  void reset();
+  void reset(bool wasGameOver);
 
   std::default_random_engine re;
   std::uniform_int_distribution<unsigned int> dist;
@@ -29,6 +29,10 @@ private:
    * 0 - score dirty
    * 1 - is blinking
    * 2 - happy
+   * 3 - fruit dirty
+   * 4 - cut has happened
+   * 5 - sad
+   * 6 - relativeCutPos is set
    */
   std::bitset<32> flags;
   float areaSizeRatio;
@@ -37,6 +41,20 @@ private:
   float blinkTimer;
   float cutTimer;
   float cutTimerRateInc;
+  float ratio;
+  float width;
+  float height;
+  float offsetX;
+  float offsetY;
+  float cutPos;
+  float relativeCutRatio;
+  float splitX;
+  float splitY;
+  float splitAngle;
+  float splitDX;
+  float splitDY;
+  float splitDAngle;
+  float postCutTimer;
 };
 
 #endif
